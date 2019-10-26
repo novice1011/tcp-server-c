@@ -92,7 +92,9 @@ int main()
         printf("Server listening..\n");
 
     // Accept the data packet from client and verification
-    connfd = accept(sockfd, (SA*)&cli, &len);
+//    connfd = accept(sockfd, (SA*)&cli, &len);
+    // server side - see man page for accept4 under linux
+    connfd = accept4(sockfd, (SA*)&cli, &len, SOCK_NONBLOCK);
     if (connfd < 0) {
         printf("server acccept failed...\n");
         exit(0);
