@@ -17,7 +17,6 @@ void reconnect(int *sockfd, int *connfd){
     struct sockaddr_in servaddr, cli;
     socklen_t len = sizeof(cli);
     // socket create and verification
-    //1.domain 2.type 3. protocol http://man7.org/linux/man-pages/man2/socket.2.html#top_of_page
     close(*sockfd);
     *sockfd = socket(AF_INET, SOCK_STREAM, 0);
     int option = 1;
@@ -34,13 +33,7 @@ void reconnect(int *sockfd, int *connfd){
     // assign IP, PORT
     servaddr.sin_addr.s_addr = htonl(INADDR_ANY);//192.168.0.104
     servaddr.sin_port = htons(PORT);
-    /*
-     * INADDR_ANY :
-     * For a server, you typically want to bind to all interfaces - not just "localhost".
-     * If you wish to bind your socket to localhost only
-     * the syntax would be my_sockaddress.sin_addr.s_addr = inet_addr("127.0.0.1");
-     * then call bind(my_socket, (SOCKADDR *) &my_sockaddr, ...).
-     */
+
     // Binding newly created socket to given IP and verification
     if ((bind(*sockfd, (SA*)&servaddr, sizeof(servaddr))) != 0) {
         printf("socket bind failed...\n");
@@ -111,3 +104,24 @@ int main()
         }
     }
 }
+
+//code modified from :
+//https://www.geeksforgeeks.org/tcp-server-client-implementation-in-c/
+
+//reconnect, reuse socket immediately :
+//https://stackoverflow.com/questions/5106674/error-address-already-in-use-while-binding-socket-with-address-but-the-port-num
+
+//reconnect procedure:
+//https://stackoverflow.com/questions/16211018/how-to-reconnect-the-clients-to-server
+
+//create socket argument:
+//http://man7.org/linux/man-pages/man2/socket.2.html#top_of_page
+
+/*
+ * INADDR_ANY :
+ * https://stackoverflow.com/questions/16508685/understanding-inaddr-any-for-socket-programming
+ * For a server, you typically want to bind to all interfaces - not just "localhost".
+ * If you wish to bind your socket to localhost only
+ * the syntax would be my_sockaddress.sin_addr.s_addr = inet_addr("127.0.0.1");
+ * then call bind(my_socket, (SOCKADDR *) &my_sockaddr, ...).
+ */
