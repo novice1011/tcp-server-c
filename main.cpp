@@ -6,6 +6,7 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h> //read write
+#include <fcntl.h>
 
 
 #define MAX 80
@@ -49,6 +50,7 @@ int main()
     socklen_t len = sizeof(cli);
 
     // socket create and verification
+    //1.domain 2.type 3. protocol http://man7.org/linux/man-pages/man2/socket.2.html#top_of_page
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd == -1) {
         printf("socket creation failed...\n");
@@ -57,12 +59,14 @@ int main()
     else
         printf("Socket successfully created..\n");
     bzero(&servaddr, sizeof(servaddr)); //create memory
+//    fcntl(sockfd, F_SETFL, flags | O_NONBLOCK);
 
     // assign IP, PORT
     ;
     servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
     servaddr.sin_port = htons(PORT);
     /*
+     * INADDR_ANY :
      * For a server, you typically want to bind to all interfaces - not just "localhost".
      * If you wish to bind your socket to localhost only
      * the syntax would be my_sockaddress.sin_addr.s_addr = inet_addr("127.0.0.1");
@@ -86,8 +90,6 @@ int main()
     }
     else
         printf("Server listening..\n");
-
-//    bzero(&cli, sizeof(cli)); //create memory
 
     // Accept the data packet from client and verification
     connfd = accept(sockfd, (SA*)&cli, &len);
