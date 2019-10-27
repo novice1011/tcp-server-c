@@ -108,3 +108,35 @@ int main()
     // After chatting close the socket
     close(sockfd);
 }
+
+
+
+//NON BLOCKING READ FROM
+///https://stackoverflow.com/questions/1543466/how-do-i-change-a-tcp-socket-to-be-non-blocking
+/*
+   // client side
+   int socketfd = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, 0);
+
+   // server side - see man page for accept4 under linux
+   int socketfd = accept4( ... , SOCK_NONBLOCK);
+ */
+
+/*
+/*
+#include <fcntl.h>
+//Returns true on success, or false if there was an error
+bool SetSocketBlockingEnabled(int fd, bool blocking)
+{
+   if (fd < 0) return false;
+
+#ifdef _WIN32
+   unsigned long mode = blocking ? 0 : 1;
+   return (ioctlsocket(fd, FIONBIO, &mode) == 0) ? true : false;
+#else
+   int flags = fcntl(fd, F_GETFL, 0);
+   if (flags == -1) return false;
+   flags = blocking ? (flags & ~O_NONBLOCK) : (flags | O_NONBLOCK);
+   return (fcntl(fd, F_SETFL, flags) == 0) ? true : false;
+#endif
+}
+ */
