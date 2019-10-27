@@ -98,7 +98,6 @@ int main()
 
     while (1) {
         if (func(connfd)<0){
-            close(sockfd);
             reconnect(&sockfd,&connfd);
         }
         else if (func(connfd)==0) {
